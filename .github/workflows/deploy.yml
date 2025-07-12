@@ -20,7 +20,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.HOST_DNS }}
           REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: "/home/ubuntu/app"  # <-- This is where the code is uploaded on EC2
+          TARGET: "/home/ubuntu/app" 
 
       - name: Configure and deploy on EC2
         uses: appleboy/ssh-action@master
@@ -33,11 +33,10 @@ jobs:
             sudo apt-get update -y
             sudo apt-get install -y apache2
 
-            # Ensure Apache is running
+            #  Apache is running or not
             sudo systemctl start apache2
             sudo systemctl enable apache2
 
-            # Remove old HTML files
             sudo rm -rf /var/www/html/*
 
             # Copy new files from uploaded app
