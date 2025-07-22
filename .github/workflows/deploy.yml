@@ -54,10 +54,16 @@ jobs:
           key: ${{ env.PRIVATE_SSH_KEY }}
           envs: PRIVATE_SSH_KEY,REGISTRY,REPOSITORY,IMAGE_TAG,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION,AWS_REGION
           script: |
-            sudo apt update
-            sudo apt install docker.io awscli -y
-            sudo $(aws ecr get-login --no-include-email --region ap-south-1)
-            sudo docker stop myappcontainer || true
-            sudo docker rm myappcontainer || true
-            sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
-            sudo docker run -d --name myappcontainer -p 80:80 $REGISTRY/$REPOSITORY:$IMAGE_TAG
+               curl -fsSL https://get.docker.com -o get-docker.sh
+                sudo sh get-docker.sh
+            
+                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                unzip -q awscliv2.zip
+                sudo ./aws/install
+            
+                sudo $(aws ecr get-login --no-include-email --region ap-south-1)
+            
+                sudo docker stop myappcontainer || true
+                sudo docker rm myappcontainer || true
+                sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+                sudo docker run -d --name myappcontainer -p 80:80 $REGISTRY/$REPOSITORY:$IMAGE_TAG
