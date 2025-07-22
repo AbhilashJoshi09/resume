@@ -56,14 +56,20 @@ jobs:
           script: |
                curl -fsSL https://get.docker.com -o get-docker.sh
                 sudo sh get-docker.sh
-            
+                
+                sudo apt-get update
+                sudo apt-get install -y unzip curl
+                
                 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                unzip -q awscliv2.zip
+                unzip awscliv2.zip
                 sudo ./aws/install
-            
-                sudo $(aws ecr get-login --no-include-email --region ap-south-1)
-            
+                
+                aws --version
+                
+                aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin $REGISTRY
+                
                 sudo docker stop myappcontainer || true
                 sudo docker rm myappcontainer || true
                 sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
                 sudo docker run -d --name myappcontainer -p 80:80 $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
